@@ -11,6 +11,7 @@ import cors from "cors";
 // import bodyParser from "body-parser";
 import createHttpError from "http-errors";
 import { logger } from "./utils/index";
+import routes from "./routes";
 
 // constants
 const port: number = parseInt(process.env.PORT || "8000");
@@ -45,7 +46,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(compression());
 // app.use("/files", express.static("./files"));
-// app.use("/api/v1", routes);
+app.use("/api/v1", routes);
 
 // error handling
 app.use((req: Request, res: Response, next: NextFunction): void => {
