@@ -5,13 +5,11 @@ import { Server } from "socket.io";
 import "dotenv/config";
 import morgan from "morgan";
 import helmet from "helmet";
-import mongoSanitize from "express-mongo-sanitize";
 import cookieParser from "cookie-parser";
 import compression from "compression";
-import fileUpload from "express-fileupload";
 import cors from "cors";
+// import bodyParser from "body-parser";
 import createHttpError from "http-errors";
-import mongoose from "mongoose";
 import { logger } from "./utils/index";
 
 // constants
@@ -22,32 +20,32 @@ const app: Application = express();
 const server: http.Server = http.createServer(app);
 const io: Server = new Server(server);
 
+const allowedOrigins = ["http://localhost:3000"];
+
+const corsOptions = {
+  origin: (
+    origin: string | undefined,
+    callback: (err: Error | null, allow?: boolean) => void
+  ) => {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error("Not allowed by CORS"));
+    }
+  },
+  credentials: true,
+};
+
 // middlewares
 app.use(morgan(process.env.NODE_ENV === "development" ? "dev" : "tiny"));
 app.use(helmet());
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
-app.use(mongoSanitize());
+app.use(cors(corsOptions));
 app.use(cookieParser());
+app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
 app.use(compression());
-app.use(fileUpload({ useTempFiles: true }));
-app.use(cors({ origin: "*" }));
-app.use("/files", express.static("./files"));
+// app.use("/files", express.static("./files"));
 // app.use("/api/v1", routes);
-
-// database
-mongoose.connect(databaseUrl).then(() => {
-  logger.info("connected to database");
-});
-
-mongoose.connection.on("error", (error: Error): void => {
-  logger.error("database connection error: " + error);
-  process.exit(1);
-});
-
-if (process.env.NODE_ENV === "development") {
-  mongoose.set("debug", true);
-}
 
 // error handling
 app.use((req: Request, res: Response, next: NextFunction): void => {

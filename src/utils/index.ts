@@ -1,2 +1,4 @@
 import logger from "./logger";
-export { logger };
+import jwt from "./jwt";
+import prisma from "./prisma";
+export { logger, jwt, prisma };
