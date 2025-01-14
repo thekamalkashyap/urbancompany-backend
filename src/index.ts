@@ -21,6 +21,14 @@ const app: Application = express();
 const server: http.Server = http.createServer(app);
 const io: Server = new Server(server);
 
+declare global {
+  namespace Express {
+    interface Request {
+      user?: { id: string } | undefined | null;
+    }
+  }
+}
+
 const allowedOrigins = ["http://localhost:3000"];
 
 const corsOptions = {
