@@ -8,14 +8,12 @@ import helmet from "helmet";
 import cookieParser from "cookie-parser";
 import compression from "compression";
 import cors from "cors";
-// import bodyParser from "body-parser";
 import createHttpError from "http-errors";
 import { logger } from "./utils/index";
 import routes from "./routes";
 
 // constants
 const port: number = parseInt(process.env.PORT || "8000");
-const databaseUrl: string = process.env.DATABASE_URL || "";
 
 const app: Application = express();
 const server: http.Server = http.createServer(app);

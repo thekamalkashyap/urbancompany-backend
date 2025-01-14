@@ -33,7 +33,7 @@ export const updateCategory = async (
 ) => {
   try {
     const categoryID = req.params.category;
-    const { newCategoryID } = req.body;
+    const { categoryID: newCategoryID } = req.body;
 
     const categories = await prisma.service.updateMany({
       where: { categoryID },

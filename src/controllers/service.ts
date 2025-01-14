@@ -3,10 +3,10 @@ import { Request, Response, NextFunction } from "express";
 import createHttpError from "http-errors";
 import { Role } from "@prisma/client";
 
-const isVendor = async (id: number) => {
-  const user = await prisma.user.findUnique({ where: { id } });
+const isVendor = async (id: string) => {
+  const user = await prisma.user.findUnique({ where: { id: parseInt(id) } });
   if (!user || user.userType !== Role.VENDOR) {
-    return Promise.reject();
+    throw createHttpError.BadRequest("VendorID is invalid");
   } else {
     return Promise.resolve();
   }

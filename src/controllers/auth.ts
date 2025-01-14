@@ -87,11 +87,12 @@ export const login = async (
       );
 
       res.cookie("accessToken", accessToken, {});
-    }
 
-    return res.status(200).json({
-      message: "User authenticated successfully.",
-    });
+      res.status(200).json({
+        message: "User authenticated successfully.",
+        accessToken,
+      });
+    }
   } catch (error) {
     next(error);
   }

@@ -5,6 +5,6 @@ const routes = Router();
 routes.post("/register", register);
 routes.post("/login", login);
 routes.get("/logout", logout);
-routes.delete("/delete/:id", deleteUser);
+routes.delete("/:id", deleteUser);
 
 export default routes;

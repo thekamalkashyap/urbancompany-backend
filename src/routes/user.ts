@@ -9,11 +9,11 @@ import {
 } from "../controllers/user";
 
 const routes = Router();
-routes.post("/", getAllUsers);
+routes.get("/bookings", listAllBookings);
+routes.get("/", getAllUsers);
 routes.get("/:id", getUserProfile);
 routes.put("/:id", updateInfo);
 routes.post("/book/:id", bookService);
-routes.get("/bookings", listAllBookings);
 routes.get("/bookings/:id", listBookings);
 
 export default routes;

@@ -9,7 +9,7 @@ export const getAllUsers = async (
   next: NextFunction
 ) => {
   try {
-    const users = await prisma.user.findMany();
+    const users = await prisma.user.findMany({ where: { isDeleted: false } });
     if (!users) {
       throw createHttpError.BadRequest("No user found");
     }
@@ -45,7 +45,7 @@ export const updateInfo = async (
 ) => {
   try {
     const id = parseInt(req.params.id);
-    req.body.updatedAt = Date.now();
+    req.body.updatedAt = new Date();
 
     await prisma.user.update({
       where: { id },
@@ -64,15 +64,17 @@ export const bookService = async (
   next: NextFunction
 ) => {
   try {
-    const userID = parseInt(req.params.id);
+    const userID = req.params.id;
     const { serviceID, vendorID } = req.body;
     const service = await prisma.service.findUnique({
-      where: { id: serviceID },
+      where: { id: parseInt(serviceID) },
     });
     const vendor = await prisma.user.findUnique({
-      where: { id: vendorID, userType: Role.VENDOR },
+      where: { id: parseInt(vendorID), userType: Role.VENDOR },
     });
-    const user = await prisma.user.findUnique({ where: { id: userID } });
+    const user = await prisma.user.findUnique({
+      where: { id: parseInt(userID) },
+    });
 
     if (!service || !vendor || !user) {
       throw createHttpError.BadRequest("Invalid Request");
